@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    
+    public Shopper ShopperFollower
+    {
+        get => shopperFollower;
+        set => shopperFollower = value;
+    }
     private float speed = 6f;
     private CharacterController controller;
     private Animator animator;
+    private Shopper shopperFollower;
 
     // Start is called before the first frame update
     void Start()
@@ -30,5 +37,15 @@ public class Player : MonoBehaviour
             animator.Play("Running");
         }
         else animator.Play("Idle");
+    }
+
+    public void SetFollower(Shopper follower)
+    {
+        shopperFollower = follower;
+    }
+
+    public Grocery GetFollowerGrocery()
+    {
+        return shopperFollower.GetGroceries()[0];
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Aisle))]
 public class Shopper : MonoBehaviour
 {
     public enum AiState
@@ -15,9 +16,10 @@ public class Shopper : MonoBehaviour
         Pay = 2,
         Leave = 3
     }
-    
+
+    public bool foundGrocery = false;
     private NavMeshAgent agent;
-    private Transform playerTransform;
+    private Player player;
     private GameObject[] waypoints;
     private Animator animator;
     private string currentAnimaton;
@@ -70,7 +72,7 @@ public class Shopper : MonoBehaviour
         groceries = new List<Grocery>();
         waypoints = GameObject.FindGameObjectsWithTag("Waypoints");
         agent = GetComponent<NavMeshAgent>();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         animator = GetComponent<Animator>();
         searchCount = MAXSEARCHCOUNT;
     }
@@ -80,6 +82,11 @@ public class Shopper : MonoBehaviour
     {
         CurrentState = AiState.Patrol;
         groceries = GetRandGroceries();
+    }
+
+    private void Update()
+    {
+        PlayAnimations();
     }
 
     #region State Routines
@@ -93,12 +100,16 @@ public class Shopper : MonoBehaviour
 
             if (ReachedDestination())
             {
-                ChangeAnimationState("Idle");
+                currentWaypoint = GetRandomWaypoint();
                 yield return new WaitForSeconds(Random.Range(3, 10));
                 CheckForGroceries();
-                currentWaypoint = GetRandomWaypoint();
             }
-            ChangeAnimationState("Walk");
+            
+            if (searchCount <= 0)
+                CurrentState = AiState.Follow;
+            else
+                agent.stoppingDistance = 0.5f;
+            
 
             yield return null;
         }
@@ -106,10 +117,28 @@ public class Shopper : MonoBehaviour
     
     public IEnumerator StateFollow()
     {
+        print("FOLLOWING PLAYER");
+        player.SetFollower(this);
+        
         while (CurrentState == AiState.Follow)
         {
-            agent.SetDestination(playerTransform.position);
-            
+            if (foundGrocery)
+            {
+                agent.stoppingDistance = 0.5f;
+
+                if (ReachedDestination())
+                {
+                    yield return new WaitForSeconds(3);
+                    CurrentState = AiState.Patrol;
+                }
+            }
+            else
+            {
+                agent.SetDestination(player.transform.position);
+                agent.stoppingDistance = 2f;
+                foundGrocery = false;
+            }
+
             yield return null;
         }
     }
@@ -123,7 +152,6 @@ public class Shopper : MonoBehaviour
 
             if (ReachedDestination())
             {
-                ChangeAnimationState("Idle");
                 yield return new WaitForSeconds(3);
                 CurrentState = AiState.Leave;
             }
@@ -149,6 +177,7 @@ public class Shopper : MonoBehaviour
     #endregion
 
     
+    
     #region Functions
 
     private GameObject GetRandomWaypoint()
@@ -163,23 +192,26 @@ public class Shopper : MonoBehaviour
         
         foreach (var grocery in groceries)
         {
-            if (currentAisle.HasGrocery(grocery))
+            if (CurrentAisle && CurrentAisle.HasGrocery(grocery))
             {
                 print($"HAS GROCERY {grocery.name}");
                 removedGrocery = grocery;
                 foundItem = true;
-                searchCount = MAXSEARCHCOUNT;
             }
-            else searchCount--;
         }
-        if(foundItem)
+
+        if (foundItem)
+        {
             groceries.Remove(removedGrocery);
-        
+            ResetSearch();
+        }
+        else searchCount--;
+
         if (groceries.Count <= 0)
             CurrentState = AiState.Pay;
     }
 
-    private bool ReachedDestination()
+    public bool ReachedDestination()
     {
         if (!agent.pathPending)
         {
@@ -207,6 +239,19 @@ public class Shopper : MonoBehaviour
 
         return newGroceries;
     }
+
+    public NavMeshAgent GetAgent()
+    {
+        return agent;
+    }
+
+    public void ResumeShopping(Grocery grocery, Transform aisleWaypoint)
+    {
+        groceries.Remove(grocery);
+        foundGrocery = true;
+        currentWaypoint = aisleWaypoint.gameObject;
+        ResetSearch();
+    }
     
     private void ChangeAnimationState(string newAnimation)
     {
@@ -214,7 +259,25 @@ public class Shopper : MonoBehaviour
 
         animator.Play(newAnimation);
         currentAnimaton = newAnimation;
-    }    
+    }
+
+    private void PlayAnimations()
+    {
+        if(ReachedDestination())
+            ChangeAnimationState("Idle");
+        else
+            ChangeAnimationState("Walk");
+    }
+
+    public List<Grocery> GetGroceries()
+    {
+        return groceries;
+    }
+
+    public void ResetSearch()
+    {
+        searchCount = MAXSEARCHCOUNT;
+    }
     
     #endregion
 }
