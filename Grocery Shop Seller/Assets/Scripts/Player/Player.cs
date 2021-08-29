@@ -8,8 +8,10 @@ public class Player : MonoBehaviour
     public Shopper ShopperFollower
     {
         get => shopperFollower;
+    
         set => shopperFollower = value;
     }
+
     private float speed = 6f;
     private CharacterController controller;
     private Animator animator;
