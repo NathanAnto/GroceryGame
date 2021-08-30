@@ -8,9 +8,12 @@ public class Player : MonoBehaviour
     private CharacterController controller;
     private Animator animator;
 
+    private float timer;
+
     // Start is called before the first frame update
     void Start()
     {
+        timer = 5;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
     }
@@ -30,5 +33,17 @@ public class Player : MonoBehaviour
             animator.Play("Running");
         }
         else animator.Play("Idle");
+
+        if (timer <= 0) {
+            StopCoroutine(StartRegisterTimer());
+            timer = 0;
+        }
+}
+    
+    public IEnumerator StartRegisterTimer()
+    {
+        print(timer);
+        timer--;
+        yield return new WaitForSeconds(1);
     }
 }
