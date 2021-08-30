@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    
     public Shopper ShopperFollower
     {
         get => shopperFollower;
     
         set => shopperFollower = value;
     }
+    
+    public Coroutine timerCoroutine;
 
     private float speed = 6f;
     private CharacterController controller;
@@ -18,13 +19,15 @@ public class Player : MonoBehaviour
     private Shopper shopperFollower;
 
     private float timer;
+    private float maxTimer;
 
     // Start is called before the first frame update
     void Start()
     {
-        timer = 5;
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        maxTimer = 5;
+        timer = maxTimer;
     }
 
     // Update is called once per frame
@@ -42,18 +45,31 @@ public class Player : MonoBehaviour
             animator.Play("Running");
         }
         else animator.Play("Idle");
-
-        if (timer <= 0) {
-            StopCoroutine(StartRegisterTimer());
-            timer = 0;
-        }
-}
+    }
     
     public IEnumerator StartRegisterTimer()
     {
-        print(timer);
-        timer--;
-        yield return new WaitForSeconds(1);
+        timer = maxTimer;
+        
+        while (timer > 0)
+        {
+            print(timer);
+            timer--;
+            yield return new WaitForSeconds(1);
+        }
+        StopRegisterTimer();
+        yield return null;
+    }
+
+    public void StartRegisterCoroutine()
+    {
+        timerCoroutine = StartCoroutine(StartRegisterTimer());
+    }
+
+    public void StopRegisterTimer()
+    {
+        StopCoroutine(timerCoroutine);
+        timer = maxTimer;
     }
 
     public void SetFollower(Shopper follower)

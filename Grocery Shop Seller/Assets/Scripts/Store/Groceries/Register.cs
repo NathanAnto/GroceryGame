@@ -15,7 +15,15 @@ public class Register : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            StartCoroutine(player.StartRegisterTimer());
+            player.StartRegisterCoroutine();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            player.StopRegisterTimer();
         }
     }
 }
