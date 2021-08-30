@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -29,18 +30,19 @@ public class Aisle : MonoBehaviour
         // Set Shopper current aisle
         if (other.CompareTag("Shopper"))
         {
-            other.GetComponent<Shopper>().CurrentAisle = this;
-            // print($"Current aisle {aisleName}");
+            if(other.GetComponent<Shopper>().CurrentAisle == null)
+                other.GetComponent<Shopper>().CurrentAisle = this;
         }
         
         // Check if player found correct aisle
         if (other.CompareTag("Player") && player.ShopperFollower)
         {
-            Grocery grocery = player.GetFollowerGrocery();
+            var grocery = player.GetFollowerGrocery();
             
             if (groceries.Contains(grocery))
             {
                 print("FOUND CORRECT AISLE");
+                player.ShopperFollower.foundGrocery = true;
                 player.ShopperFollower.ResumeShopping(grocery, aisleWaypoints[0]);
                 player.ShopperFollower = null;
             }

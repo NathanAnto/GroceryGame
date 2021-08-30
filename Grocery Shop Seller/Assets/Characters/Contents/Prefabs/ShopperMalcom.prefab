@@ -1764,7 +1764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foundGrocery: 0
   popupPrefab: {fileID: 8276479969992008341, guid: 46de398ad311de94ca0378d3e97f2b87, type: 3}
-  _currentState: 0
+  currentState: 0
   currentWaypoint: {fileID: 0}
   groceries: []
   helpTransform: {fileID: 807653252}
