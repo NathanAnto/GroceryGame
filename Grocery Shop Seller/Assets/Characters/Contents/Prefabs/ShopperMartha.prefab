@@ -323,8 +323,9 @@ GameObject:
   - component: {fileID: 950121005344934952}
   - component: {fileID: 767084699175773675}
   - component: {fileID: 767084699175773674}
-  - component: {fileID: 767084699175773672}
   - component: {fileID: 767084699175773673}
+  - component: {fileID: 767084699175773672}
+  - component: {fileID: 3228468244969906715}
   m_Layer: 0
   m_Name: ShopperMartha
   m_TagString: Untagged
@@ -351,6 +352,7 @@ Transform:
   - {fileID: 5117307804529373542}
   - {fileID: 205130921926225622}
   - {fileID: 2258376658117012293}
+  - {fileID: 5813645054778627333}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -389,20 +391,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &767084699175773672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 460583950445221522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbaa4016c2fb5d94f9ea15c0ac2eb4dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _currentState: 0
-  currentWaypoint: {fileID: 0}
 --- !u!195 &767084699175773673
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -425,6 +413,37 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
+--- !u!114 &767084699175773672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460583950445221522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbaa4016c2fb5d94f9ea15c0ac2eb4dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foundGrocery: 0
+  popupPrefab: {fileID: 8276479969992008341, guid: 46de398ad311de94ca0378d3e97f2b87, type: 3}
+  _currentState: 0
+  currentWaypoint: {fileID: 0}
+  groceries: []
+  helpTransform: {fileID: 5813645054778627333}
+--- !u!65 &3228468244969906715
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460583950445221522}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5, y: 1, z: 5}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &715970511238742950
 GameObject:
   m_ObjectHideFlags: 0
@@ -2654,6 +2673,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4866438399968831589}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8434153343419095121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5813645054778627333}
+  m_Layer: 0
+  m_Name: Help
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5813645054778627333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8434153343419095121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 950121005344934952}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8438388691729910181
 GameObject:
